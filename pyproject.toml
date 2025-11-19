@@ -1,0 +1,19 @@
+[project]
+name = "akamai-wrapper-pub"
+version = "0.2.0"
+description = "Shared Akamai utilities for Python projects"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+dependencies = [
+    "edgegrid-python>=2.0.2",
+    "requests>=2.32.0",
+    "tabulate>=0.9.0",
+]
+
+[project.scripts]
+search-asw = "akamai_wrapper_pub.cli.account_search:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
