@@ -8,21 +8,14 @@ Shared Akamai utilities for Python projects. This package provides common functi
 - **CLI Tools**: Command-line utilities for common tasks
   - `search-asw`: Search for account switch keys
 
-## Installation
-
-### For Development (Editable Mode)
-
-Install in your project with editable mode to enable live updates:
+## Install with uv
 
 ```bash
-# From your project directory
-uv add --editable ../akamai-wrapper-pub
-```
-
-### As a Regular Dependency
-
-```bash
+# Add as a regular dependency
 uv add akamai-wrapper-pub
+
+# Or for development in editable mode
+uv add --editable ../akamai-wrapper-pub
 ```
 
 ## Usage
@@ -72,25 +65,6 @@ pre-commit install
 ```
 
 For detailed development setup, testing, and contribution guidelines, see [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md).
-
-## API Reference
-
-### `Akamai` Class
-
-Main API client with EdgeGrid authentication.
-
-**Methods:**
-- `__init__(edgerc_path, section, timeout, account_switch_key)` - Initialize client
-- `get(path, query, params)` - Make GET request
-- `put(path, data, params)` - Make PUT request
-- `FromOptions(options)` - Create from argparse options (classmethod)
-
-See inline docstrings for detailed parameter documentation.
-
-## Requirements
-
-- Python 3.9+
-- Dependencies: `edgegrid-python`, `requests`, `tabulate` (see `pyproject.toml`)
 
 ## License
 
