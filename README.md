@@ -7,6 +7,7 @@ Shared Akamai utilities for Python projects. This package provides common functi
 - **Akamai API Client**: Base class with EdgeGrid authentication
 - **CLI Tools**: Command-line utilities for common tasks
   - `search-asw`: Search for account switch keys
+  - `search-group`: Search for group
 
 ## Install with uv
 
@@ -51,6 +52,21 @@ uv run search-asw --section production "Account Name"
 
 # With verbose logging
 uv run search-asw --verbose "Account Name"
+```
+
+#### Group Search
+
+Search for Akamai group:
+
+```bash
+# Basic search
+uv run search-group "Group Name"
+
+# With custom edgerc section
+uv run search-group --section production "Group Name"
+
+# With verbose logging
+uv run search-group --verbose "Group Name"
 ```
 
 ## Development
