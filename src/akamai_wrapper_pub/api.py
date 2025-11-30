@@ -79,6 +79,7 @@ class Akamai:
         path: str,
         query: Optional[str] = None,
         params: Optional[Dict[str, Any]] = None,
+        headers: Optional[Dict[str, str]] = None,
     ) -> Any:
         """Make GET request to Akamai API.
 
@@ -86,6 +87,7 @@ class Akamai:
             path: API path (e.g., '/identity-management/v3/...')
             query: Optional query string
             params: Optional query parameters dict
+            headers: Optional request headers
 
         Returns:
             Parsed JSON response or error dict/string
@@ -108,7 +110,7 @@ class Akamai:
             query_params["accountSwitchKey"] = self.account_switch_key
 
         response = self.session.get(
-            url, params=query_params, timeout=self.timeout
+            url, params=query_params, headers=headers, timeout=self.timeout
         )
         return self._handle_response(response)
 
@@ -117,6 +119,7 @@ class Akamai:
         path: str,
         data: Optional[Dict[str, Any]] = None,
         params: Optional[Dict[str, Any]] = None,
+        headers: Optional[Dict[str, str]] = None,
     ) -> Any:
         """Make PUT request to Akamai API.
 
@@ -124,6 +127,7 @@ class Akamai:
             path: API path
             data: Request body data
             params: Optional query parameters
+            headers: Optional request headers
 
         Returns:
             Parsed JSON response or error dict/string
@@ -135,6 +139,91 @@ class Akamai:
             query_params["accountSwitchKey"] = self.account_switch_key
 
         response = self.session.put(
-            url, json=data, params=query_params, timeout=self.timeout
+            url, json=data, params=query_params, headers=headers, timeout=self.timeout
+        )
+        return self._handle_response(response)
+
+    def post(
+        self,
+        path: str,
+        data: Optional[Dict[str, Any]] = None,
+        params: Optional[Dict[str, Any]] = None,
+        headers: Optional[Dict[str, str]] = None,
+    ) -> Any:
+        """Make POST request to Akamai API.
+
+        Args:
+            path: API path
+            data: Request body data
+            params: Optional query parameters
+            headers: Optional request headers
+
+        Returns:
+            Parsed JSON response or error dict/string
+        """
+        url = urljoin(self.base_url, path)
+
+        query_params = params or {}
+        if self.account_switch_key:
+            query_params["accountSwitchKey"] = self.account_switch_key
+
+        response = self.session.post(
+            url, json=data, params=query_params, headers=headers, timeout=self.timeout
+        )
+        return self._handle_response(response)
+
+    def patch(
+        self,
+        path: str,
+        data: Optional[Dict[str, Any]] = None,
+        params: Optional[Dict[str, Any]] = None,
+        headers: Optional[Dict[str, str]] = None,
+    ) -> Any:
+        """Make PATCH request to Akamai API.
+
+        Args:
+            path: API path
+            data: Request body data
+            params: Optional query parameters
+            headers: Optional request headers
+
+        Returns:
+            Parsed JSON response or error dict/string
+        """
+        url = urljoin(self.base_url, path)
+
+        query_params = params or {}
+        if self.account_switch_key:
+            query_params["accountSwitchKey"] = self.account_switch_key
+
+        response = self.session.patch(
+            url, json=data, params=query_params, headers=headers, timeout=self.timeout
+        )
+        return self._handle_response(response)
+
+    def delete(
+        self,
+        path: str,
+        params: Optional[Dict[str, Any]] = None,
+        headers: Optional[Dict[str, str]] = None,
+    ) -> Any:
+        """Make DELETE request to Akamai API.
+
+        Args:
+            path: API path
+            params: Optional query parameters
+            headers: Optional request headers
+
+        Returns:
+            Parsed JSON response or error dict/string
+        """
+        url = urljoin(self.base_url, path)
+
+        query_params = params or {}
+        if self.account_switch_key:
+            query_params["accountSwitchKey"] = self.account_switch_key
+
+        response = self.session.delete(
+            url, params=query_params, headers=headers, timeout=self.timeout
         )
         return self._handle_response(response)

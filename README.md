@@ -1,87 +1,89 @@
 # akamai-wrapper-pub
 
-Shared Akamai utilities for Python projects. This package provides common functionality for interacting with Akamai APIs across multiple projects.
+Lightweight Akamai CLI utilities and Python API client with EdgeGrid authentication.
 
 ## Features
 
-- **Akamai API Client**: Base class with EdgeGrid authentication
-- **CLI Tools**: Command-line utilities for common tasks
-  - `search-asw`: Search for account switch keys
-  - `search-group`: Search for group
+- **API Client**: Python client with EdgeGrid auth supporting GET/POST/PUT/PATCH/DELETE
+- **CLI Tools**:
+  - `search-asw` - Search for account switch keys
+  - `search-group` - Search for groups by name
+  - `list-properties` - List all properties with version info
+  - `download-property` - Download property rules to JSON
 
-## Install with uv
+## Installation
 
 ```bash
-# Add as a regular dependency
 uv add akamai-wrapper-pub
-
-# Or for development in editable mode
-uv add --editable ../akamai-wrapper-pub
 ```
 
-## Usage
+## CLI Usage
 
-### As a Library
+All commands support these common options:
+- `-k, --account-switch-key` - Account switch key for multi-account access
+- `-t, --timeout` - Request timeout in seconds (default: 30)
+- `--edgerc` - Path to .edgerc file (default: ~/.edgerc)
+- `--section` - Section in .edgerc (default: default)
+- `--verbose` - Enable verbose output
+
+### search-asw
+
+Search for account switch keys by name:
+
+```bash
+uv run search-asw "Account Name"
+```
+
+### search-group
+
+Search for groups by name (case-insensitive partial match):
+
+```bash
+uv run search-group "Group Name"
+uv run search-group -k 1-ABCDE:1-12345 "Hong Kong"
+```
+
+### list-properties
+
+List all properties with version info:
+
+```bash
+uv run list-properties
+uv run list-properties -g grp_123456        # Filter by group ID
+uv run list-properties -k 1-ABCDE:1-12345   # With account switch key
+```
+
+### download-property
+
+Download property rules to JSON:
+
+```bash
+uv run download-property prp_123456
+uv run download-property prp_123456 -v 5    # Specific version
+uv run download-property prp_123456 -o out.json
+```
+
+## Library Usage
 
 ```python
 from akamai_wrapper_pub import Akamai
 
-# Initialize client
-client = Akamai(
-    edgerc_path="~/.edgerc",
-    section="default",
-    timeout=30
-)
+client = Akamai(edgerc_path="~/.edgerc", section="default")
 
-# Make API calls
-result = client.get('/identity-management/v3/api-clients/self/account-switch-keys')
-```
+# GET request
+result = client.get('/papi/v1/groups')
 
-### CLI Tools
-
-#### Account Search
-
-Search for Akamai account-switch-key:
-
-```bash
-# Basic search
-uv run search-asw "Account Name"
-
-# With custom edgerc section
-uv run search-asw --section production "Account Name"
-
-# With verbose logging
-uv run search-asw --verbose "Account Name"
-```
-
-#### Group Search
-
-Search for Akamai group:
-
-```bash
-# Basic search
-uv run search-group "Group Name"
-
-# With custom edgerc section
-uv run search-group --section production "Group Name"
-
-# With verbose logging
-uv run search-group --verbose "Group Name"
+# POST request with body
+result = client.post('/papi/v1/search/find-by-value', data={"propertyName": "example"})
 ```
 
 ## Development
 
 ```bash
-# Clone and install
-cd akamai-wrapper-pub
 uv sync
-
-# Install pre-commit hooks (requires Trivy)
 pre-commit install
 ```
 
-For detailed development setup, testing, and contribution guidelines, see [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md).
-
 ## License
 
-Licensed under the MIT License. See `LICENSE` for details.
+MIT
