@@ -61,11 +61,15 @@ def download_property_rules(
         return False
 
 
+# Akamai PAPI rate limit: 3 rule tree exports per minute
+DEFAULT_EXPORT_DELAY = 21  # seconds (safe for 3/min limit)
+
+
 def download_properties(
     akm_api: Akamai,
     group_filter: str | None = None,
     output_dir: str = "./properties",
-    rate_limit_delay: float = 0.5,
+    rate_limit_delay: float = DEFAULT_EXPORT_DELAY,
     verbose: bool = False,
 ) -> None:
     """Download all property rule trees to JSON files.
@@ -74,7 +78,7 @@ def download_properties(
         akm_api: Akamai API client
         group_filter: Optional group ID filter
         output_dir: Output directory path
-        rate_limit_delay: Delay between API calls in seconds
+        rate_limit_delay: Delay between downloads in seconds (default: 21s for rate limit)
         verbose: Enable verbose output
     """
     # Create output directory
@@ -201,8 +205,8 @@ def main():
     parser.add_argument(
         "--delay",
         type=float,
-        default=0.5,
-        help="Delay between API calls in seconds (default: 0.5)",
+        default=DEFAULT_EXPORT_DELAY,
+        help=f"Delay between downloads in seconds (default: {DEFAULT_EXPORT_DELAY}, for 3/min rate limit)",
     )
     add_common_args(parser)
 

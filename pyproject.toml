@@ -1,6 +1,6 @@
 [project]
 name = "akamai-wrapper-pub"
-version = "0.5.0"
+version = "0.5.1"
 description = "Shared Akamai utilities for Python projects"
 readme = "README.md"
 requires-python = ">=3.9"

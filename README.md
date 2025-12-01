@@ -72,8 +72,10 @@ Download all property rules to JSON files (uses production version if available,
 uv run download-properties
 uv run download-properties -g grp_123456    # Filter by group ID
 uv run download-properties -o ./output      # Custom output directory
-uv run download-properties --delay 1.0      # Slower rate limiting
+uv run download-properties --delay 30       # Custom delay between downloads
 ```
+
+> **Note:** Akamai PAPI limits rule tree exports to 3/min. Default delay is 21s to stay within limits. The API client also auto-retries on 429 errors with exponential backoff.
 
 ## Library Usage
 

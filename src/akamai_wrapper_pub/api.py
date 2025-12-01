@@ -1,11 +1,17 @@
 """Akamai API client base class."""
 
 import os
+import sys
+import time
 from typing import Any, Dict, Optional
 from urllib.parse import urljoin
 
 import requests
 from akamai.edgegrid import EdgeGridAuth, EdgeRc
+
+# Default retry settings for rate limiting (429)
+DEFAULT_MAX_RETRIES = 5
+DEFAULT_RETRY_BASE_DELAY = 20  # seconds
 
 
 class Akamai:
@@ -17,6 +23,8 @@ class Akamai:
         section: str = "default",
         timeout: int = 30,
         account_switch_key: Optional[str] = None,
+        max_retries: int = DEFAULT_MAX_RETRIES,
+        retry_base_delay: int = DEFAULT_RETRY_BASE_DELAY,
     ):
         """Initialize Akamai API client.
 
@@ -25,9 +33,13 @@ class Akamai:
             section: Section name in .edgerc
             timeout: Request timeout in seconds
             account_switch_key: Optional account switch key
+            max_retries: Max retries on 429 rate limit errors
+            retry_base_delay: Base delay in seconds for retry backoff
         """
         self.timeout = timeout
         self.account_switch_key = account_switch_key
+        self.max_retries = max_retries
+        self.retry_base_delay = retry_base_delay
 
         # Load EdgeGrid credentials
         edgerc_path = os.path.expanduser(edgerc_path)
@@ -74,6 +86,56 @@ class Akamai:
         except ValueError as e:
             return {"error": f"JSON decode error: {e}"}
 
+    def _request_with_retry(
+        self,
+        method: str,
+        url: str,
+        **kwargs,
+    ) -> requests.Response:
+        """Make request with retry on 429 rate limit errors.
+
+        Args:
+            method: HTTP method (get, post, put, etc.)
+            url: Request URL
+            **kwargs: Additional arguments for requests
+
+        Returns:
+            requests Response object
+
+        Raises:
+            requests.exceptions.HTTPError: If max retries exceeded
+        """
+        request_func = getattr(self.session, method)
+
+        for attempt in range(self.max_retries + 1):
+            response = request_func(url, **kwargs)
+
+            if response.status_code != 429:
+                return response
+
+            if attempt == self.max_retries:
+                # Max retries exceeded, return the 429 response
+                return response
+
+            # Calculate backoff delay with exponential increase
+            delay = self.retry_base_delay * (2 ** attempt)
+
+            # Check for Retry-After header
+            retry_after = response.headers.get("Retry-After")
+            if retry_after:
+                try:
+                    delay = max(delay, int(retry_after))
+                except ValueError:
+                    pass
+
+            print(
+                f"Rate limited (429). Retrying in {delay}s (attempt {attempt + 1}/{self.max_retries})...",
+                file=sys.stderr,
+            )
+            time.sleep(delay)
+
+        return response
+
     def get(
         self,
         path: str,
@@ -109,8 +171,8 @@ class Akamai:
         if self.account_switch_key:
             query_params["accountSwitchKey"] = self.account_switch_key
 
-        response = self.session.get(
-            url, params=query_params, headers=headers, timeout=self.timeout
+        response = self._request_with_retry(
+            "get", url, params=query_params, headers=headers, timeout=self.timeout
         )
         return self._handle_response(response)
 
@@ -138,8 +200,8 @@ class Akamai:
         if self.account_switch_key:
             query_params["accountSwitchKey"] = self.account_switch_key
 
-        response = self.session.put(
-            url, json=data, params=query_params, headers=headers, timeout=self.timeout
+        response = self._request_with_retry(
+            "put", url, json=data, params=query_params, headers=headers, timeout=self.timeout
         )
         return self._handle_response(response)
 
@@ -167,8 +229,8 @@ class Akamai:
         if self.account_switch_key:
             query_params["accountSwitchKey"] = self.account_switch_key
 
-        response = self.session.post(
-            url, json=data, params=query_params, headers=headers, timeout=self.timeout
+        response = self._request_with_retry(
+            "post", url, json=data, params=query_params, headers=headers, timeout=self.timeout
         )
         return self._handle_response(response)
 
@@ -196,8 +258,8 @@ class Akamai:
         if self.account_switch_key:
             query_params["accountSwitchKey"] = self.account_switch_key
 
-        response = self.session.patch(
-            url, json=data, params=query_params, headers=headers, timeout=self.timeout
+        response = self._request_with_retry(
+            "patch", url, json=data, params=query_params, headers=headers, timeout=self.timeout
         )
         return self._handle_response(response)
 
@@ -223,7 +285,7 @@ class Akamai:
         if self.account_switch_key:
             query_params["accountSwitchKey"] = self.account_switch_key
 
-        response = self.session.delete(
-            url, params=query_params, headers=headers, timeout=self.timeout
+        response = self._request_with_retry(
+            "delete", url, params=query_params, headers=headers, timeout=self.timeout
         )
         return self._handle_response(response)
