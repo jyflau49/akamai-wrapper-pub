@@ -10,6 +10,7 @@ Lightweight Akamai CLI utilities and Python API client with EdgeGrid authenticat
   - `search-group` - Search for groups by name
   - `list-properties` - List all properties with version info
   - `download-property` - Download property rules to JSON
+  - `download-properties` - Download all property rules to JSON files
 
 ## Installation
 
@@ -49,8 +50,8 @@ List all properties with version info:
 
 ```bash
 uv run list-properties
-uv run list-properties -g grp_123456        # Filter by group ID
-uv run list-properties -k 1-ABCDE:1-12345   # With account switch key
+uv run list-properties -g grp_123456      # Filter by group ID
+uv run list-properties -k 1-ABCDE:1-12345 # With account switch key
 ```
 
 ### download-property
@@ -59,8 +60,19 @@ Download property rules to JSON:
 
 ```bash
 uv run download-property prp_123456
-uv run download-property prp_123456 -v 5    # Specific version
-uv run download-property prp_123456 -o out.json
+uv run download-property prp_123456 -v 5         # Specific version
+uv run download-property prp_123456 -o out.json  # Custom output file
+```
+
+### download-properties
+
+Download all property rules to JSON files (uses production version if available, otherwise latest):
+
+```bash
+uv run download-properties
+uv run download-properties -g grp_123456    # Filter by group ID
+uv run download-properties -o ./output      # Custom output directory
+uv run download-properties --delay 1.0      # Slower rate limiting
 ```
 
 ## Library Usage

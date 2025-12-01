@@ -1,6 +1,6 @@
 [project]
 name = "akamai-wrapper-pub"
-version = "0.4.0"
+version = "0.5.0"
 description = "Shared Akamai utilities for Python projects"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -16,6 +16,7 @@ search-asw = "akamai_wrapper_pub.cli.account_search:main"
 search-group = "akamai_wrapper_pub.cli.group_search:main"
 list-properties = "akamai_wrapper_pub.cli.list_properties:main"
 download-property = "akamai_wrapper_pub.cli.property_download:main"
+download-properties = "akamai_wrapper_pub.cli.properties_download:main"
 
 [build-system]
 requires = ["hatchling"]

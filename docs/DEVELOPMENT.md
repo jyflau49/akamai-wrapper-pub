@@ -1,6 +1,6 @@
 # Development Guide
 
-**Last modified: 2025-11-19**
+**Last modified: 2025-12-01**
 
 ## Setup
 

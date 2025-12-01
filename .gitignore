@@ -12,3 +12,6 @@ wheels/
 # Cache
 .ruff_cache/
 __pycache__/
+
+# properties
+properties
