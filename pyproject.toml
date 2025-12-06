@@ -1,6 +1,6 @@
 [project]
-name = "akamai-wrapper-pub"
-version = "0.5.1"
+name = "akamai-wrappy"
+version = "0.6.0"
 description = "Shared Akamai utilities for Python projects"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -12,11 +12,11 @@ dependencies = [
 ]
 
 [project.scripts]
-search-asw = "akamai_wrapper_pub.cli.account_search:main"
-search-group = "akamai_wrapper_pub.cli.group_search:main"
-list-properties = "akamai_wrapper_pub.cli.list_properties:main"
-download-property = "akamai_wrapper_pub.cli.property_download:main"
-download-properties = "akamai_wrapper_pub.cli.properties_download:main"
+search-asw = "akamai_wrappy.cli.account_search:main"
+search-group = "akamai_wrappy.cli.group_search:main"
+list-properties = "akamai_wrappy.cli.list_properties:main"
+download-property = "akamai_wrappy.cli.property_download:main"
+download-properties = "akamai_wrappy.cli.properties_download:main"
 
 [build-system]
 requires = ["hatchling"]

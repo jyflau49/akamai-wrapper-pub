@@ -1,12 +1,12 @@
 # Development Guide
 
-**Last modified: 2025-12-01**
+**Last modified: 2025-12-06**
 
 ## Setup
 
 ```bash
 # Clone and install dependencies
-cd akamai-wrapper-pub
+cd akamai-wrappy
 uv sync
 
 # Install pre-commit hooks

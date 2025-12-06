@@ -1,6 +1,6 @@
 """Shared Akamai utilities for Python projects."""
 
-from akamai_wrapper_pub.api import Akamai
+from akamai_wrappy.api import Akamai
 
-__version__ = "0.5.1"
+__version__ = "0.6.0"
 __all__ = ["Akamai"]

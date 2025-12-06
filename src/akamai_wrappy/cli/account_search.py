@@ -7,8 +7,8 @@ from typing import Any, Dict, List
 
 from tabulate import tabulate
 
-from akamai_wrapper_pub.api import Akamai
-from akamai_wrapper_pub.cli.common import add_common_args
+from akamai_wrappy.api import Akamai
+from akamai_wrappy.cli.common import add_common_args
 
 
 def account_search(akm_api: Akamai, name: str) -> List[Dict[str, Any]]:

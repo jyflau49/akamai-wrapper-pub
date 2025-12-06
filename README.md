@@ -1,4 +1,4 @@
-# akamai-wrapper-pub
+# akamai-wrappy
 
 Lightweight Akamai CLI utilities and Python API client with EdgeGrid authentication.
 
@@ -15,7 +15,7 @@ Lightweight Akamai CLI utilities and Python API client with EdgeGrid authenticat
 ## Installation
 
 ```bash
-uv add akamai-wrapper-pub
+uv add akamai-wrappy
 ```
 
 ## CLI Usage
@@ -80,7 +80,7 @@ uv run download-properties --delay 30       # Custom delay between downloads
 ## Library Usage
 
 ```python
-from akamai_wrapper_pub import Akamai
+from akamai_wrappy import Akamai
 
 client = Akamai(edgerc_path="~/.edgerc", section="default")
 
