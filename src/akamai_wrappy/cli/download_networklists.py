@@ -57,7 +57,7 @@ def download_networklists(
     success_count = 0
 
     for i, nl in enumerate(network_lists, 1):
-        nl_id = nl.get("networkListId", "unknown")
+        nl_id = nl.get("uniqueId", "unknown")
         nl_name = nl.get("name", "unknown")
         nl_type = nl.get("type", "IP")
         elements = nl.get("list", []) or []

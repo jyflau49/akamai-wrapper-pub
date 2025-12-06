@@ -43,7 +43,7 @@ def list_networklists(
     for nl in network_lists:
         results.append({
             "name": nl.get("name", ""),
-            "networkListId": nl.get("networkListId", ""),
+            "uniqueId": nl.get("uniqueId", ""),
             "type": nl.get("type", ""),
             "elementCount": nl.get("elementCount", 0),
         })

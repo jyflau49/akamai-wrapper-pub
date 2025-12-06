@@ -45,7 +45,7 @@ def list_clientlists(
             "name": cl.get("name", ""),
             "listId": cl.get("listId", ""),
             "type": cl.get("type", ""),
-            "itemCount": cl.get("itemCount", 0),
+            "itemsCount": cl.get("itemsCount", 0),
             "stagingStatus": cl.get("stagingActivationStatus", ""),
             "productionStatus": cl.get("productionActivationStatus", ""),
         })
