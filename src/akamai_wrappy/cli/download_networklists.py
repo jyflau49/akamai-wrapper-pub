@@ -5,20 +5,14 @@ import argparse
 import csv
 import os
 import sys
-import time
 from typing import Any, Dict, List
 
 from akamai_wrappy.api import Akamai
 from akamai_wrappy.cli.common import add_common_args
 
-# Rate limit: 30 requests per minute = 2 seconds between requests
-DEFAULT_DELAY = 2
-
-
 def download_networklists(
     akm_api: Akamai,
     output_dir: str = "./networklists",
-    rate_limit_delay: float = DEFAULT_DELAY,
     verbose: bool = False,
 ) -> None:
     """Download all network lists to CSV files.
@@ -26,7 +20,6 @@ def download_networklists(
     Args:
         akm_api: Akamai API client
         output_dir: Output directory path
-        rate_limit_delay: Delay between API calls in seconds
         verbose: Enable verbose output
     """
     os.makedirs(output_dir, exist_ok=True)
@@ -80,11 +73,6 @@ def download_networklists(
         except Exception as e:
             print(f"✗ Failed to write {nl_name}: {e}", file=sys.stderr)
 
-        # Rate limiting (not strictly needed since we fetch all in one call,
-        # but keeping for consistency if we need per-list fetches later)
-        if i < len(network_lists) and rate_limit_delay > 0:
-            time.sleep(rate_limit_delay)
-
     print(f"\nDownloaded {success_count} of {len(network_lists)} network lists", file=sys.stderr)
 
 
@@ -100,12 +88,6 @@ def main():
         default="./networklists",
         help="Output directory (default: ./networklists)",
     )
-    parser.add_argument(
-        "--delay",
-        type=float,
-        default=DEFAULT_DELAY,
-        help=f"Delay between operations in seconds (default: {DEFAULT_DELAY})",
-    )
     add_common_args(parser)
 
     options = parser.parse_args()
@@ -114,7 +96,6 @@ def main():
     download_networklists(
         akm_api,
         output_dir=options.output_dir,
-        rate_limit_delay=options.delay,
         verbose=options.verbose,
     )
 

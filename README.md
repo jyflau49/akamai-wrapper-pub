@@ -117,7 +117,7 @@ uv run download-clientlists
 uv run download-clientlists -o ./output  # Custom output directory
 ```
 
-> **Note:** Network Lists and Client Lists APIs have a 30 req/min rate limit.
+> **Note:** Network Lists and Client Lists are fetched in a single API call with all elements included.
 
 ## Library Usage
 
