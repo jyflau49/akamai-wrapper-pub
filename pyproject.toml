@@ -1,6 +1,6 @@
 [project]
 name = "akamai-wrappy"
-version = "0.8.1"
+version = "0.9.0"
 description = "Shared Akamai utilities for Python projects"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -13,15 +13,6 @@ dependencies = [
 
 [project.scripts]
 awp = "akamai_wrappy.cli.main:main"
-search-asw = "akamai_wrappy.cli.account_search:main"
-search-group = "akamai_wrappy.cli.group_search:main"
-list-properties = "akamai_wrappy.cli.list_properties:main"
-download-property = "akamai_wrappy.cli.property_download:main"
-download-properties = "akamai_wrappy.cli.properties_download:main"
-list-networklists = "akamai_wrappy.cli.list_networklists:main"
-download-networklists = "akamai_wrappy.cli.download_networklists:main"
-list-clientlists = "akamai_wrappy.cli.list_clientlists:main"
-download-clientlists = "akamai_wrappy.cli.download_clientlists:main"
 
 [build-system]
 requires = ["hatchling"]
