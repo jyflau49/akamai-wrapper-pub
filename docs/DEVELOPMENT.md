@@ -35,3 +35,16 @@ pre-commit run --all-files
 trivy fs --severity HIGH,CRITICAL .
 trivy config --severity HIGH,CRITICAL .
 ```
+
+## Smoke Test
+
+Run the smoke test to verify CLI functionality:
+
+```bash
+./scripts/smoke_test.sh
+```
+
+This tests:
+- All `awp` subcommand `--help` outputs
+- Python import and version
+- API connectivity (if `~/.edgerc` exists)

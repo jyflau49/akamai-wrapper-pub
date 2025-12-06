@@ -1,6 +1,6 @@
 [project]
 name = "akamai-wrappy"
-version = "0.8.0"
+version = "0.8.1"
 description = "Shared Akamai utilities for Python projects"
 readme = "README.md"
 requires-python = ">=3.9"
