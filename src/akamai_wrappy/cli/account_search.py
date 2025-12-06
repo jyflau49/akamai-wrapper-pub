@@ -33,18 +33,17 @@ def account_search(akm_api: Akamai, name: str) -> List[Dict[str, Any]]:
     return result
 
 
-def main():
-    """CLI entry point."""
-    parser = argparse.ArgumentParser(
-        description="Search for Akamai account switch keys by name"
-    )
+def add_args(parser: argparse.ArgumentParser) -> None:
+    """Add arguments to parser."""
     parser.add_argument(
         "name",
         help="Account name to search (partial match supported)",
     )
     add_common_args(parser)
 
-    options = parser.parse_args()
+
+def run(options: argparse.Namespace) -> None:
+    """Run the command with parsed options."""
     akm_api = Akamai.FromOptions(options)
     result = account_search(akm_api, options.name)
 
@@ -52,6 +51,16 @@ def main():
         print(tabulate(result, headers="keys", tablefmt="fancy_grid"))
     else:
         print("No results found")
+
+
+def main():
+    """CLI entry point."""
+    parser = argparse.ArgumentParser(
+        description="Search for Akamai account switch keys by name"
+    )
+    add_args(parser)
+    options = parser.parse_args()
+    run(options)
 
 
 if __name__ == "__main__":

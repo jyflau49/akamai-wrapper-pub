@@ -183,11 +183,8 @@ def download_properties(
     print(f"\nDownloaded {success_count} of {total_count} properties", file=sys.stderr)
 
 
-def main():
-    """CLI entry point."""
-    parser = argparse.ArgumentParser(
-        description="Download all Akamai property rules to JSON files"
-    )
+def add_args(parser: argparse.ArgumentParser) -> None:
+    """Add arguments to parser."""
     parser.add_argument(
         "-g",
         "--group",
@@ -210,9 +207,10 @@ def main():
     )
     add_common_args(parser)
 
-    options = parser.parse_args()
-    akm_api = Akamai.FromOptions(options)
 
+def run(options: argparse.Namespace) -> None:
+    """Run the command with parsed options."""
+    akm_api = Akamai.FromOptions(options)
     download_properties(
         akm_api,
         group_filter=options.group,
@@ -220,6 +218,16 @@ def main():
         rate_limit_delay=options.delay,
         verbose=options.verbose,
     )
+
+
+def main():
+    """CLI entry point."""
+    parser = argparse.ArgumentParser(
+        description="Download all Akamai property rules to JSON files"
+    )
+    add_args(parser)
+    options = parser.parse_args()
+    run(options)
 
 
 if __name__ == "__main__":

@@ -76,11 +76,8 @@ def download_networklists(
     print(f"\nDownloaded {success_count} of {len(network_lists)} network lists", file=sys.stderr)
 
 
-def main():
-    """CLI entry point."""
-    parser = argparse.ArgumentParser(
-        description="Download all Akamai network lists to CSV files"
-    )
+def add_args(parser: argparse.ArgumentParser) -> None:
+    """Add arguments to parser."""
     parser.add_argument(
         "-o",
         "--output-dir",
@@ -90,14 +87,25 @@ def main():
     )
     add_common_args(parser)
 
-    options = parser.parse_args()
-    akm_api = Akamai.FromOptions(options)
 
+def run(options: argparse.Namespace) -> None:
+    """Run the command with parsed options."""
+    akm_api = Akamai.FromOptions(options)
     download_networklists(
         akm_api,
         output_dir=options.output_dir,
         verbose=options.verbose,
     )
+
+
+def main():
+    """CLI entry point."""
+    parser = argparse.ArgumentParser(
+        description="Download all Akamai network lists to CSV files"
+    )
+    add_args(parser)
+    options = parser.parse_args()
+    run(options)
 
 
 if __name__ == "__main__":

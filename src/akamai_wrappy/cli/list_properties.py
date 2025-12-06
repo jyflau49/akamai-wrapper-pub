@@ -88,11 +88,8 @@ def list_properties(
     return properties_list
 
 
-def main():
-    """CLI entry point."""
-    parser = argparse.ArgumentParser(
-        description="List all Akamai properties with version info"
-    )
+def add_args(parser: argparse.ArgumentParser) -> None:
+    """Add arguments to parser."""
     parser.add_argument(
         "-g",
         "--group",
@@ -108,7 +105,9 @@ def main():
     )
     add_common_args(parser)
 
-    options = parser.parse_args()
+
+def run(options: argparse.Namespace) -> None:
+    """Run the command with parsed options."""
     akm_api = Akamai.FromOptions(options)
     result = list_properties(
         akm_api,
@@ -122,6 +121,16 @@ def main():
         print(f"\nTotal: {len(result)} properties")
     else:
         print("No properties found")
+
+
+def main():
+    """CLI entry point."""
+    parser = argparse.ArgumentParser(
+        description="List all Akamai properties with version info"
+    )
+    add_args(parser)
+    options = parser.parse_args()
+    run(options)
 
 
 if __name__ == "__main__":

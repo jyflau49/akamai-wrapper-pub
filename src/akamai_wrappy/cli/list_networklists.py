@@ -51,24 +51,31 @@ def list_networklists(
     return results
 
 
-def main():
-    """CLI entry point."""
-    parser = argparse.ArgumentParser(
-        description="List all Akamai network lists"
-    )
+def add_args(parser: argparse.ArgumentParser) -> None:
+    """Add arguments to parser."""
     add_common_args(parser)
 
-    options = parser.parse_args()
-    akm_api = Akamai.FromOptions(options)
 
+def run(options: argparse.Namespace) -> None:
+    """Run the command with parsed options."""
+    akm_api = Akamai.FromOptions(options)
     results = list_networklists(akm_api, verbose=options.verbose)
 
     if not results:
         print("No network lists found", file=sys.stderr)
         sys.exit(1)
 
-    # Print as table
     print(tabulate(results, headers="keys", tablefmt="simple"))
+
+
+def main():
+    """CLI entry point."""
+    parser = argparse.ArgumentParser(
+        description="List all Akamai network lists"
+    )
+    add_args(parser)
+    options = parser.parse_args()
+    run(options)
 
 
 if __name__ == "__main__":

@@ -4,8 +4,7 @@ Lightweight Akamai CLI utilities and Python API client with EdgeGrid authenticat
 
 ## Features
 
-- **API Client**: Python client with EdgeGrid auth supporting GET/POST/PUT/PATCH/DELETE
-- **CLI Tools**:
+- **CLI Tools** (via `awp` command):
   - `search-asw` - Search for account switch keys
   - `search-group` - Search for groups by name
   - `list-properties` - List all properties with version info
@@ -15,11 +14,52 @@ Lightweight Akamai CLI utilities and Python API client with EdgeGrid authenticat
   - `download-networklists` - Download all network lists to CSV files
   - `list-clientlists` - List all client lists
   - `download-clientlists` - Download all client lists to CSV files
+- **API Client**: Python client with EdgeGrid auth supporting GET/POST/PUT/PATCH/DELETE
 
 ## Installation
 
+### Global Tool Install (Recommended)
+
+Install as a global CLI tool:
+
 ```bash
-uv add akamai-wrappy
+uv tool install git+https://github.com/jyflau49/akamai-wrappy
+```
+
+Commands are available via the `awp` prefix:
+
+```bash
+awp list-properties -k 1-ABCDE:1-12345
+awp download-networklists -o ./output
+```
+
+**Upgrade:**
+
+```bash
+uv tool install --reinstall git+https://github.com/jyflau49/akamai-wrappy
+```
+
+### Development Install
+
+Clone and run from source:
+
+```bash
+git clone https://github.com/jyflau49/akamai-wrappy.git
+cd akamai-wrappy
+uv sync
+```
+
+Commands are run via `uv run awp`:
+
+```bash
+uv run awp list-properties -k 1-ABCDE:1-12345
+uv run awp download-networklists -o ./output
+```
+
+**Upgrade:**
+
+```bash
+git pull && uv sync
 ```
 
 ## CLI Usage
@@ -36,7 +76,7 @@ All commands support these common options:
 Search for account switch keys by name:
 
 ```bash
-uv run search-asw "Account Name"
+awp search-asw "Account Name"
 ```
 
 ### search-group
@@ -44,8 +84,8 @@ uv run search-asw "Account Name"
 Search for groups by name (case-insensitive partial match):
 
 ```bash
-uv run search-group "Group Name"
-uv run search-group -k 1-ABCDE:1-12345 "Hong Kong"
+awp search-group "Group Name"
+awp search-group -k 1-ABCDE:1-12345 "Hong Kong"
 ```
 
 ### list-properties
@@ -53,9 +93,9 @@ uv run search-group -k 1-ABCDE:1-12345 "Hong Kong"
 List all properties with version info:
 
 ```bash
-uv run list-properties
-uv run list-properties -g grp_123456      # Filter by group ID
-uv run list-properties -k 1-ABCDE:1-12345 # With account switch key
+awp list-properties
+awp list-properties -g grp_123456      # Filter by group ID
+awp list-properties -k 1-ABCDE:1-12345 # With account switch key
 ```
 
 ### download-property
@@ -63,9 +103,9 @@ uv run list-properties -k 1-ABCDE:1-12345 # With account switch key
 Download property rules to JSON:
 
 ```bash
-uv run download-property prp_123456
-uv run download-property prp_123456 -v 5         # Specific version
-uv run download-property prp_123456 -o out.json  # Custom output file
+awp download-property prp_123456
+awp download-property prp_123456 -v 5         # Specific version
+awp download-property prp_123456 -o out.json  # Custom output file
 ```
 
 ### download-properties
@@ -73,10 +113,10 @@ uv run download-property prp_123456 -o out.json  # Custom output file
 Download all property rules to JSON files (uses production version if available, otherwise latest):
 
 ```bash
-uv run download-properties
-uv run download-properties -g grp_123456    # Filter by group ID
-uv run download-properties -o ./output      # Custom output directory
-uv run download-properties --delay 30       # Custom delay between downloads
+awp download-properties
+awp download-properties -g grp_123456    # Filter by group ID
+awp download-properties -o ./output      # Custom output directory
+awp download-properties --delay 30       # Custom delay between downloads
 ```
 
 > **Note:** Akamai PAPI limits rule tree exports to 3/min. Default delay is 21s to stay within limits. The API client also auto-retries on 429 errors with exponential backoff.
@@ -86,8 +126,8 @@ uv run download-properties --delay 30       # Custom delay between downloads
 List all network lists:
 
 ```bash
-uv run list-networklists
-uv run list-networklists -k 1-ABCDE:1-12345  # With account switch key
+awp list-networklists
+awp list-networklists -k 1-ABCDE:1-12345  # With account switch key
 ```
 
 ### download-networklists
@@ -95,8 +135,8 @@ uv run list-networklists -k 1-ABCDE:1-12345  # With account switch key
 Download all network lists to CSV files:
 
 ```bash
-uv run download-networklists
-uv run download-networklists -o ./output  # Custom output directory
+awp download-networklists
+awp download-networklists -o ./output  # Custom output directory
 ```
 
 ### list-clientlists
@@ -104,8 +144,8 @@ uv run download-networklists -o ./output  # Custom output directory
 List all client lists:
 
 ```bash
-uv run list-clientlists
-uv run list-clientlists -k 1-ABCDE:1-12345  # With account switch key
+awp list-clientlists
+awp list-clientlists -k 1-ABCDE:1-12345  # With account switch key
 ```
 
 ### download-clientlists
@@ -113,8 +153,8 @@ uv run list-clientlists -k 1-ABCDE:1-12345  # With account switch key
 Download all client lists to CSV files:
 
 ```bash
-uv run download-clientlists
-uv run download-clientlists -o ./output  # Custom output directory
+awp download-clientlists
+awp download-clientlists -o ./output  # Custom output directory
 ```
 
 > **Note:** Network Lists and Client Lists are fetched in a single API call with all elements included.

@@ -46,18 +46,17 @@ def group_search(akm_api: Akamai, name: str) -> List[Dict[str, Any]]:
     return matches
 
 
-def main():
-    """CLI entry point."""
-    parser = argparse.ArgumentParser(
-        description="Search for Akamai groups by name (case-insensitive partial match)"
-    )
+def add_args(parser: argparse.ArgumentParser) -> None:
+    """Add arguments to parser."""
     parser.add_argument(
         "name",
         help="Group name to search",
     )
     add_common_args(parser)
 
-    options = parser.parse_args()
+
+def run(options: argparse.Namespace) -> None:
+    """Run the command with parsed options."""
     akm_api = Akamai.FromOptions(options)
     result = group_search(akm_api, options.name)
 
@@ -65,6 +64,16 @@ def main():
         print(tabulate(result, headers="keys", tablefmt="fancy_grid"))
     else:
         print("No results found")
+
+
+def main():
+    """CLI entry point."""
+    parser = argparse.ArgumentParser(
+        description="Search for Akamai groups by name (case-insensitive partial match)"
+    )
+    add_args(parser)
+    options = parser.parse_args()
+    run(options)
 
 
 if __name__ == "__main__":

@@ -71,11 +71,8 @@ def property_download(
     print(f"Saved to {output_file}")
 
 
-def main():
-    """CLI entry point."""
-    parser = argparse.ArgumentParser(
-        description="Download Akamai property rules to JSON file"
-    )
+def add_args(parser: argparse.ArgumentParser) -> None:
+    """Add arguments to parser."""
     parser.add_argument(
         "property_id",
         help="Property ID (e.g., prp_123456)",
@@ -96,7 +93,9 @@ def main():
     )
     add_common_args(parser)
 
-    options = parser.parse_args()
+
+def run(options: argparse.Namespace) -> None:
+    """Run the command with parsed options."""
     akm_api = Akamai.FromOptions(options)
     property_download(
         akm_api,
@@ -104,6 +103,16 @@ def main():
         version=options.version,
         output_file=options.output,
     )
+
+
+def main():
+    """CLI entry point."""
+    parser = argparse.ArgumentParser(
+        description="Download Akamai property rules to JSON file"
+    )
+    add_args(parser)
+    options = parser.parse_args()
+    run(options)
 
 
 if __name__ == "__main__":
