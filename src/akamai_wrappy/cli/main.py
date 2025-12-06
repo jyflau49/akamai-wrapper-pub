@@ -4,6 +4,11 @@
 import argparse
 import sys
 
+from rich.console import Console
+from rich.table import Table
+from rich.text import Text
+
+from akamai_wrappy import __version__
 from akamai_wrappy.cli import (
     account_search,
     download_clientlists,
@@ -16,98 +21,99 @@ from akamai_wrappy.cli import (
     property_download,
 )
 
+COMMANDS = {
+    "search-asw": (account_search, "Search for account switch keys"),
+    "search-group": (group_search, "Search for groups by name"),
+    "list-properties": (list_properties, "List all properties with version info"),
+    "download-property": (property_download, "Download property rules to JSON"),
+    "download-properties": (properties_download, "Download all property rules to JSON"),
+    "list-networklists": (list_networklists, "List all network lists"),
+    "download-networklists": (download_networklists, "Download network lists to CSV"),
+    "list-clientlists": (list_clientlists, "List all client lists"),
+    "download-clientlists": (download_clientlists, "Download client lists to CSV"),
+}
+
+
+def print_help():
+    """Print custom colored help message."""
+    console = Console()
+
+    # Header
+    header = Text()
+    header.append("awp", style="bold cyan")
+    header.append(": Akamai Wrappy CLI - Lightweight Akamai utilities\n", style="dim")
+    console.print(header)
+
+    # Usage
+    console.print("[bold]Usage:[/bold] awp [OPTIONS] <COMMAND>\n")
+
+    # Commands table
+    console.print("[bold]Commands:[/bold]")
+    table = Table(show_header=False, box=None, padding=(0, 2, 0, 2))
+    table.add_column(style="green")
+    table.add_column(style="dim")
+
+    for cmd, (_, desc) in COMMANDS.items():
+        table.add_row(cmd, desc)
+
+    console.print(table)
+    console.print()
+
+    # Options
+    console.print("[bold]Options:[/bold]")
+    console.print("  [green]-h, --help[/green]     Print help")
+    console.print("  [green]-V, --version[/green]  Print version")
+    console.print()
+
+    # Global options
+    console.print("[bold]Global options:[/bold] [dim](available for all commands)[/dim]")
+    console.print("  [green]-k, --account-switch-key[/green]  Account switch key for multi-account access")
+    console.print("  [green]-t, --timeout[/green]             Request timeout in seconds (default: 30)")
+    console.print("  [green]--edgerc[/green]                  Path to .edgerc file (default: ~/.edgerc)")
+    console.print("  [green]--section[/green]                 Section in .edgerc (default: default)")
+    console.print("  [green]--verbose[/green]                 Enable verbose output")
+    console.print()
+
+    # Footer
+    console.print("[dim]For help with a specific command: awp <command> --help[/dim]")
+
+
+def print_version():
+    """Print version."""
+    console = Console()
+    console.print(f"[bold cyan]awp[/bold cyan] {__version__}")
+
 
 def main():
     """Main entry point for awp CLI."""
+    # Handle --help and --version before argparse
+    if len(sys.argv) == 1 or sys.argv[1] in ("-h", "--help"):
+        print_help()
+        sys.exit(0)
+
+    if sys.argv[1] in ("-V", "--version"):
+        print_version()
+        sys.exit(0)
+
+    # Build parser for subcommands
     parser = argparse.ArgumentParser(
         prog="awp",
-        description="Akamai Wrappy CLI - Lightweight Akamai utilities",
+        add_help=False,
     )
-    subparsers = parser.add_subparsers(dest="command", help="Available commands")
+    subparsers = parser.add_subparsers(dest="command")
 
-    # search-asw
-    search_asw_parser = subparsers.add_parser(
-        "search-asw",
-        help="Search for account switch keys",
-    )
-    account_search.add_args(search_asw_parser)
-
-    # search-group
-    search_group_parser = subparsers.add_parser(
-        "search-group",
-        help="Search for groups by name",
-    )
-    group_search.add_args(search_group_parser)
-
-    # list-properties
-    list_props_parser = subparsers.add_parser(
-        "list-properties",
-        help="List all properties with version info",
-    )
-    list_properties.add_args(list_props_parser)
-
-    # download-property
-    dl_prop_parser = subparsers.add_parser(
-        "download-property",
-        help="Download property rules to JSON",
-    )
-    property_download.add_args(dl_prop_parser)
-
-    # download-properties
-    dl_props_parser = subparsers.add_parser(
-        "download-properties",
-        help="Download all property rules to JSON files",
-    )
-    properties_download.add_args(dl_props_parser)
-
-    # list-networklists
-    list_nl_parser = subparsers.add_parser(
-        "list-networklists",
-        help="List all network lists",
-    )
-    list_networklists.add_args(list_nl_parser)
-
-    # download-networklists
-    dl_nl_parser = subparsers.add_parser(
-        "download-networklists",
-        help="Download all network lists to CSV files",
-    )
-    download_networklists.add_args(dl_nl_parser)
-
-    # list-clientlists
-    list_cl_parser = subparsers.add_parser(
-        "list-clientlists",
-        help="List all client lists",
-    )
-    list_clientlists.add_args(list_cl_parser)
-
-    # download-clientlists
-    dl_cl_parser = subparsers.add_parser(
-        "download-clientlists",
-        help="Download all client lists to CSV files",
-    )
-    download_clientlists.add_args(dl_cl_parser)
+    for cmd, (module, desc) in COMMANDS.items():
+        sub = subparsers.add_parser(cmd, help=desc)
+        module.add_args(sub)
 
     args = parser.parse_args()
 
     if args.command is None:
-        parser.print_help()
+        print_help()
         sys.exit(1)
 
-    # Dispatch to the appropriate run function
-    commands = {
-        "search-asw": account_search.run,
-        "search-group": group_search.run,
-        "list-properties": list_properties.run,
-        "download-property": property_download.run,
-        "download-properties": properties_download.run,
-        "list-networklists": list_networklists.run,
-        "download-networklists": download_networklists.run,
-        "list-clientlists": list_clientlists.run,
-        "download-clientlists": download_clientlists.run,
-    }
-
-    commands[args.command](args)
+    # Dispatch
+    COMMANDS[args.command][0].run(args)
 
 
 if __name__ == "__main__":
