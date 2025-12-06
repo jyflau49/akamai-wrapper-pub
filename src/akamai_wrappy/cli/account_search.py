@@ -8,7 +8,7 @@ from typing import Any, Dict, List
 from tabulate import tabulate
 
 from akamai_wrappy.api import Akamai
-from akamai_wrappy.cli.common import add_common_args
+from akamai_wrappy.cli.common import add_common_args, get_table_format
 
 
 def account_search(akm_api: Akamai, name: str) -> List[Dict[str, Any]]:
@@ -48,7 +48,7 @@ def run(options: argparse.Namespace) -> None:
     result = account_search(akm_api, options.name)
 
     if result:
-        print(tabulate(result, headers="keys", tablefmt="fancy_grid"))
+        print(tabulate(result, headers="keys", tablefmt=get_table_format(options)))
     else:
         print("No results found")
 

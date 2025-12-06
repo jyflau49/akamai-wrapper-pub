@@ -8,7 +8,7 @@ from typing import Any, Dict, List
 from tabulate import tabulate
 
 from akamai_wrappy.api import Akamai
-from akamai_wrappy.cli.common import add_common_args
+from akamai_wrappy.cli.common import add_common_args, get_table_format
 
 
 def list_clientlists(
@@ -67,7 +67,7 @@ def run(options: argparse.Namespace) -> None:
         print("No client lists found", file=sys.stderr)
         sys.exit(1)
 
-    print(tabulate(results, headers="keys", tablefmt="simple"))
+    print(tabulate(results, headers="keys", tablefmt=get_table_format(options)))
 
 
 def main():

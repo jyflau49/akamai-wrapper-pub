@@ -41,3 +41,13 @@ def add_common_args(parser: argparse.ArgumentParser) -> None:
         action="store_true",
         help="Enable verbose output",
     )
+    parser.add_argument(
+        "--plain",
+        action="store_true",
+        help="Plain output without table borders",
+    )
+
+
+def get_table_format(options: argparse.Namespace) -> str:
+    """Get table format based on options."""
+    return "plain" if getattr(options, "plain", False) else "simple"

@@ -9,7 +9,7 @@ from typing import Any, Dict, List
 from tabulate import tabulate
 
 from akamai_wrappy.api import Akamai
-from akamai_wrappy.cli.common import add_common_args
+from akamai_wrappy.cli.common import add_common_args, get_table_format
 
 
 def list_properties(
@@ -117,7 +117,7 @@ def run(options: argparse.Namespace) -> None:
     )
 
     if result:
-        print(tabulate(result, headers="keys", tablefmt="fancy_grid"))
+        print(tabulate(result, headers="keys", tablefmt=get_table_format(options)))
         print(f"\nTotal: {len(result)} properties")
     else:
         print("No properties found")

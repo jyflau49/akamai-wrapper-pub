@@ -72,6 +72,7 @@ def print_help():
     console.print("  [green]--edgerc[/green]                  Path to .edgerc file (default: ~/.edgerc)")
     console.print("  [green]--section[/green]                 Section in .edgerc (default: default)")
     console.print("  [green]--verbose[/green]                 Enable verbose output")
+    console.print("  [green]--plain[/green]                   Plain output without table borders")
     console.print()
 
     # Footer
