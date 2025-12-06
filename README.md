@@ -11,6 +11,10 @@ Lightweight Akamai CLI utilities and Python API client with EdgeGrid authenticat
   - `list-properties` - List all properties with version info
   - `download-property` - Download property rules to JSON
   - `download-properties` - Download all property rules to JSON files
+  - `list-networklists` - List all network lists
+  - `download-networklists` - Download all network lists to CSV files
+  - `list-clientlists` - List all client lists
+  - `download-clientlists` - Download all client lists to CSV files
 
 ## Installation
 
@@ -76,6 +80,44 @@ uv run download-properties --delay 30       # Custom delay between downloads
 ```
 
 > **Note:** Akamai PAPI limits rule tree exports to 3/min. Default delay is 21s to stay within limits. The API client also auto-retries on 429 errors with exponential backoff.
+
+### list-networklists
+
+List all network lists:
+
+```bash
+uv run list-networklists
+uv run list-networklists -k 1-ABCDE:1-12345  # With account switch key
+```
+
+### download-networklists
+
+Download all network lists to CSV files:
+
+```bash
+uv run download-networklists
+uv run download-networklists -o ./output  # Custom output directory
+```
+
+### list-clientlists
+
+List all client lists:
+
+```bash
+uv run list-clientlists
+uv run list-clientlists -k 1-ABCDE:1-12345  # With account switch key
+```
+
+### download-clientlists
+
+Download all client lists to CSV files:
+
+```bash
+uv run download-clientlists
+uv run download-clientlists -o ./output  # Custom output directory
+```
+
+> **Note:** Network Lists and Client Lists APIs have a 30 req/min rate limit.
 
 ## Library Usage
 

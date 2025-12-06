@@ -13,5 +13,7 @@ wheels/
 .ruff_cache/
 __pycache__/
 
-# properties
+# Output directories
 properties
+networklists
+clientlists
